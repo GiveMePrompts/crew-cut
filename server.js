@@ -6,7 +6,7 @@ const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
 const { GENRES, keyframePrompt, motionPrompt } = require('./generators/prompts');
-const { ff, card, drawText } = require('./generators/ff');
+const { ff, card, drawText, hasDrawtext, FFMPEG } = require('./generators/ff');
 
 const PORT = Number(process.env.PORT || 3000);
 const GEN = require(`./generators/${process.env.GENERATOR || 'mock'}`);
@@ -31,6 +31,7 @@ const newCode = () => {
   while (rooms.has(c));
   return c;
 };
+const { isUnsafe } = require('./generators/safety');
 const clean = (s, n) => String(s || '').replace(/[\u0000-\u001f]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
 
 // ---------- one GPU queue for the whole server (characters + scenes) ----------
@@ -331,6 +332,7 @@ const server = http.createServer(async (req, res) => {
       if (room.players.length >= MAX_PLAYERS) return send(res, 409, { error: 'The cast is full (4 max).' });
       const name = clean(body.name, 14);
       if (!name) return send(res, 400, { error: 'Add a name for the credits.' });
+      if (isUnsafe(name)) return send(res, 400, { error: 'Pick a name you’d show on a movie poster.' });
       if (room.players.some((x) => x.name.toLowerCase() === name.toLowerCase())) return send(res, 409, { error: 'Someone already took that name.' });
       const used = new Set(room.players.map((x) => x.color));
       const pl = { id: rid(8), name, color: COLORS.find((c) => !used.has(c)) || 'tape', char: null };
@@ -377,6 +379,7 @@ const server = http.createServer(async (req, res) => {
     if (p === '/api/direct') {
       if (room.phase !== 'directing') return send(res, 409, { error: 'Not directing right now.' });
       if (body.pid !== room.directorOrder[room.sceneIndex % room.directorOrder.length]) return send(res, 403, { error: 'It’s not your turn.' });
+      if (isUnsafe(body.twist)) return send(res, 400, { error: 'Keep the twist PG. Try another one.' });
       lockScene(room, body);
       return send(res, 200, { ok: true });
     }
@@ -417,6 +420,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 if (require.main === module) {
+  if (!hasDrawtext()) console.warn(`\n  WARNING: ${FFMPEG} has no drawtext filter, so the film export will fail.\n  Install ffmpeg-full (brew install ffmpeg-full) or set FFMPEG_PATH to a build with libfreetype.\n`);
   server.listen(PORT, () => console.log(`\n  CREW CUT  (generator: ${GEN.name})\n  TV:     http://localhost:${PORT}\n  Phones: ${lanUrls().map((u) => u + '/play').join('  ') || '(connect phones to the same Wi-Fi)'}\n`));
 }
 module.exports = { server };

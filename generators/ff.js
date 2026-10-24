@@ -6,12 +6,23 @@ const path = require('path');
 const FONT_DISPLAY = path.join(__dirname, '..', 'public', 'fonts', 'BigShouldersStencil-Black.ttf');
 const FONT_UI = path.join(__dirname, '..', 'public', 'fonts', 'Fredoka-SemiBold.ttf');
 
+// FFMPEG_PATH picks a specific binary. The film export needs the drawtext filter
+// (libfreetype); Homebrew's plain `ffmpeg` formula ships without it, `ffmpeg-full` has it.
+const FFMPEG = process.env.FFMPEG_PATH || 'ffmpeg';
+
+function hasDrawtext() {
+  try {
+    const out = require('child_process').execFileSync(FFMPEG, ['-hide_banner', '-filters'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+    return / drawtext /.test(out);
+  } catch { return false; }
+}
+
 function ff(args) {
   return new Promise((resolve, reject) => {
-    const p = spawn('ffmpeg', ['-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'ignore', 'pipe'] });
+    const p = spawn(FFMPEG, ['-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'ignore', 'pipe'] });
     let err = '';
     p.stderr.on('data', (d) => (err += d));
-    p.on('error', (e) => reject(new Error(`ffmpeg not found (${e.message}). Install it: brew install ffmpeg`)));
+    p.on('error', (e) => reject(new Error(`ffmpeg not found (${e.message}). Install it: brew install ffmpeg-full`)));
     p.on('close', (c) => (c === 0 ? resolve() : reject(new Error(`ffmpeg failed: ${err.slice(-500)}`))));
   });
 }
@@ -43,4 +54,4 @@ async function keyOut(src, out, hex = '0x00FFFF') {
   return out;
 }
 
-module.exports = { ff, card, drawText, keyOut, FONT_DISPLAY, FONT_UI };
+module.exports = { ff, card, drawText, keyOut, hasDrawtext, FFMPEG, FONT_DISPLAY, FONT_UI };

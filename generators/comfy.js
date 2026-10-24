@@ -73,7 +73,7 @@ async function runStage(name, { images = [], prompt, seed }, outBase, onProgress
 
 const seedOf = (s) => (s == null ? crypto.randomInt(1, 2 ** 31) : s);
 
-const CHARACTER_PROMPT = 'Redraw this exact person as a full-body flat cel-shaded animated character: thick black outlines, bold flat colors, streetwear outfit, confident standing pose, centered, whole body visible from head to shoes with space around. Keep their face, skin tone, hair and features clearly recognizable. Flat solid cyan (#00FFFF) background, no shadow, no text, no logos.';
+const CHARACTER_PROMPT = 'Redraw this exact person as a full-body flat cel-shaded animated character: thick black outlines, bold flat colors, streetwear outfit, confident standing pose, centered, whole body visible from head to shoes with space around. Keep their face, skin tone, hair and features clearly recognizable. Flat solid cyan (#00FFFF) background, no shadow, no text, no logos. Fully clothed, family-friendly.';
 
 async function character(job, onProgress = () => {}) {
   if (!stage('character')) return mock.character(job, onProgress);

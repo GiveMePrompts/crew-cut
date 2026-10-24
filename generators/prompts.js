@@ -71,6 +71,8 @@ const GENRES = {
   },
 };
 
+const { SAFETY_LINE } = require('./safety');
+
 const STYLE = 'flat cel-shaded animation still, thick black outlines, bold flat shadows, cinematic framing, 16:9';
 
 function keyframePrompt({ genre, scene, shot, cast, twist }) {
@@ -81,11 +83,12 @@ function keyframePrompt({ genre, scene, shot, cast, twist }) {
     twist ? `Twist: ${twist}.` : '',
     STYLE,
     'No text, no logos, no real brands.',
+    SAFETY_LINE,
   ].filter(Boolean).join(' ');
 }
 
 function motionPrompt({ shot, twist }) {
-  return [shot.motion, twist ? `Show this happening: ${twist}.` : '', 'cel-shaded animation, smooth motion, 5 seconds'].filter(Boolean).join('. ');
+  return [shot.motion, twist ? `Show this happening: ${twist}.` : '', 'cel-shaded animation, smooth motion, 5 seconds', 'family-friendly, safe for work'].filter(Boolean).join('. ');
 }
 
 module.exports = { GENRES, keyframePrompt, motionPrompt };

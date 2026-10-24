@@ -18,6 +18,7 @@ const selfie = (n) => 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__di
   const { code, hostKey } = await post('/api/room', {});
   console.log('room', code);
   const P = {};
+  await rejects('/api/join', { code, name: 'pornstar' }, 'unsafe name rejected');
   for (const n of ['Supreme', 'Dre', 'Mika', 'Lou']) P[n] = (await post('/api/join', { code, name: n })).pid;
   await rejects('/api/join', { code, name: 'Fifth' }, 'room caps at 4');
   await rejects('/api/character', { code, pid: P.Supreme, selfie: selfie('supreme'), consent: false }, 'selfie without consent rejected');
@@ -41,6 +42,7 @@ const selfie = (n) => 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__di
     s = await until(code, (s) => s.phase === 'directing' && s.sceneIndex === i, 'directing ' + i);
     const dir = s.director.id; const other = Object.values(P).find((p) => p !== dir);
     await rejects('/api/direct', { code, pid: other, shotId: s.scene.shots[1].id, castIds: [dir] }, `scene ${i + 1}: non-director blocked`);
+    if (i === 0) await rejects('/api/direct', { code, pid: dir, shotId: s.scene.shots[0].id, castIds: [P.Dre], twist: 'everyone gets naked' }, 'unsafe twist rejected');
     await post('/api/direct', { code, pid: dir, shotId: s.scene.shots[i % 3].id, castIds: [P.Dre, P.Lou], twist: ['Dre forgot the flashlight', 'Lou hears it first', ''][i] });
     const after = await state(code);
     ok(!after.renders.some((r) => r.twist), `scene ${i + 1}: twist hidden before premiere`);

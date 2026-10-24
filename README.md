@@ -12,7 +12,7 @@ Built for Comfy's **#OpenSourceHiggsfield** challenge. Runs on ComfyUI through t
 5. **Awards:** vote best director and best performance. Download the film (9:16 for stories, 16:9 widescreen) or share it straight from your phone.
 
 ## Quick start (preview mode, no GPU)
-Needs Node 18+ and ffmpeg (`brew install ffmpeg`).
+Needs Node 18+ and an ffmpeg build with the `drawtext` filter for the film export (`brew install ffmpeg-full`; the plain `ffmpeg` formula lacks it). Point `FFMPEG_PATH` at a specific binary if needed.
 ```bash
 npm start
 ```
@@ -31,6 +31,7 @@ See [workflows/README.md](workflows/README.md). Short version: export your Comfy
 | `COMFY_BASE_URL` | Comfy Cloud | e.g. `http://127.0.0.1:8189` for local ComfyUI via comfy-api-proxy |
 | `COMFY_API_KEY` | – | Needed for Comfy Cloud or a deployment |
 | `MOCK_DELAY_MS` | 5000 | Fake render time in preview mode |
+| `FFMPEG_PATH` | `ffmpeg` | ffmpeg binary to use (needs `drawtext`) |
 | `VOTE_SECONDS` | 40 | Voting time |
 
 Add `?ink=0` to any URL to turn off the live ink background on slow devices.
