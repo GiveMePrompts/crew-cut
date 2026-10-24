@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090a33">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<title>Crew Cut</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+  .phone { max-width: 480px; margin: 0 auto; min-height: 100svh; padding: calc(14px + env(safe-area-inset-top)) 18px calc(26px + env(safe-area-inset-bottom)); display: grid; grid-template-rows: auto 1fr; gap: 14px; }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .top img { height: 40px; filter: drop-shadow(0 3px 0 #0007); }
+  #view { display: grid; gap: 16px; align-content: start; }
+  h2 { font-size: 2.7rem; }
+  .lead { font-size: 1.05rem; opacity: 0.9; }
+  label.f { display: grid; gap: 6px; font-weight: 600; }
+  .codein { font-family: var(--display); font-size: 2.6rem; letter-spacing: 0.32em; text-transform: uppercase; text-align: center; padding-left: 0.32em; }
+  .choice { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .opt { border: var(--stroke); border-radius: 16px; background: var(--paper); color: var(--ink); padding: 14px 12px; text-align: left; display: grid; gap: 6px; cursor: pointer; box-shadow: 0 6px 0 #0008; }
+  .opt .big { font-size: 2.2rem; }
+  .opt b { font-family: var(--display); font-size: 1.5rem; line-height: 1; }
+  .opt.hot { background: var(--hot); color: var(--paper); }
+  .presets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .preset { border: var(--stroke); border-radius: 16px; background: var(--tape); padding: 8px 8px 0; display: grid; justify-items: center; cursor: pointer; overflow: hidden; height: 200px; position: relative; }
+  .preset img { height: 160px; object-fit: contain; }
+  .preset span { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+  .preset:nth-child(2) { background: var(--hot); } .preset:nth-child(3) { background: var(--cyan); } .preset:nth-child(4) { background: var(--lilac); }
+  .preset:disabled { filter: grayscale(1) opacity(0.45); cursor: not-allowed; }
+  .selfie { display: grid; justify-items: center; gap: 10px; }
+  .selfie .shot { width: 180px; height: 180px; border-radius: 50%; border: 4px dashed var(--paper); display: grid; place-items: center; overflow: hidden; background: #ffffff14; font-size: 3rem; cursor: pointer; }
+  .selfie .shot img { width: 100%; height: 100%; object-fit: cover; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-weight: 500; font-size: 0.95rem; }
+  .consent input { width: 24px; height: 24px; flex: none; margin-top: 1px; accent-color: var(--hot); }
+  .reveal { display: grid; justify-items: center; gap: 10px; }
+  .reveal .fig { height: 46svh; max-height: 420px; display: grid; place-items: end center; }
+  .reveal .fig img { max-height: 100%; object-fit: contain; filter: drop-shadow(0 10px 0 #0009); }
+  .reveal .fig img.square { border-radius: 20px; border: var(--stroke); max-height: 300px; }
+  .making { display: grid; justify-items: center; gap: 14px; padding-top: 6svh; text-align: center; }
+  .making .inkspin { width: 120px; height: 120px; }
+  .making .pct { font-family: var(--display); font-size: 3rem; }
+  .castpick { display: flex; gap: 12px; flex-wrap: wrap; }
+  .castpick button { background: none; border: 0; padding: 0; color: var(--paper); display: grid; justify-items: center; gap: 4px; font-weight: 600; cursor: pointer; }
+  .castpick .avatar { width: 70px; height: 70px; }
+  .castpick button[aria-pressed='true'] .avatar { box-shadow: 0 0 0 4px var(--paper), 0 0 0 8px var(--hot); }
+  .timer { font-family: var(--display); font-size: 1.7rem; }
+  .wait { text-align: center; display: grid; gap: 12px; justify-items: center; padding-top: 2svh; }
+  .wait .fig { height: 44svh; max-height: 400px; display: grid; place-items: end center; }
+  .wait .fig img { max-height: 100%; object-fit: contain; filter: drop-shadow(0 10px 0 #0009); }
+  .wait .fig img.square { border-radius: 20px; border: var(--stroke); max-height: 260px; }
+  .mini { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .mini .avatar { width: 42px; height: 42px; }
+  .pad { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+  .pad button { font-size: 3rem; padding: 18px 0; border: var(--stroke); border-radius: 18px; background: var(--paper); box-shadow: 0 6px 0 #0008; cursor: pointer; }
+  .pad button:active { transform: translateY(4px); box-shadow: 0 2px 0 #0008; }
+  .card { padding: 16px; }
+</style>
+</head>
+<body>
+<canvas id="ink" aria-hidden="true"></canvas>
+<main class="phone layer">
+  <div class="top"><img src="/img/logo.png" alt="Crew Cut"><span id="who" class="tape hidden"></span></div>
+  <section id="view" aria-live="polite"></section>
+</main>
+<script src="/ink.js"></script>
+<script src="/common.js"></script>
+<script src="/play.js"></script>
+</body>
+</html>

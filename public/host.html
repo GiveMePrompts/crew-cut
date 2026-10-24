@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090a33">
+<title>Crew Cut · TV</title>
+<link rel="icon" href="/img/icon-512.png">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .tv { min-height: 100vh; padding: 2.6vh 3.4vw; display: grid; grid-template-rows: auto 1fr auto; gap: 2vh; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 2vw; }
+  header .logo { height: 11vh; min-height: 64px; filter: drop-shadow(0 6px 0 #0007); }
+  .mode { font-size: clamp(0.8rem, 1vw, 1rem); }
+  #view { display: grid; align-content: center; }
+
+  /* lobby */
+  .lobby { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr); gap: 3vw; align-items: stretch; }
+  .joincard { padding: 2.4vh 2vw; display: grid; gap: 1.6vh; align-content: start; }
+  .joincard h2 { font-size: clamp(2.2rem, 4.2vw, 4.4rem); }
+  .joinrow { display: grid; grid-template-columns: auto 1fr; gap: 1.6vw; align-items: center; }
+  .qr { background: var(--paper); border: var(--stroke); border-radius: 12px; padding: 0.5vw; width: clamp(130px, 13vw, 220px); aspect-ratio: 1; }
+  .qr svg { width: 100%; height: 100%; display: block; }
+  .codebig { font-family: var(--display); font-size: clamp(4rem, 9vw, 9rem); letter-spacing: 0.1em; line-height: 0.9; }
+  .url { font-size: clamp(0.95rem, 1.3vw, 1.3rem); }
+  .settings { display: grid; gap: 1.2vh; }
+  .settings .lbl { font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.8; }
+  .blurb { font-size: clamp(0.95rem, 1.2vw, 1.2rem); opacity: 0.9; min-height: 1.4em; }
+  .stage { position: relative; padding: 2vh 1.4vw 0; display: grid; grid-template-rows: auto 1fr; }
+  .stage h3 { font-size: clamp(1.4rem, 2vw, 2rem); }
+  .slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vw; align-items: end; min-height: 56vh; }
+  .slot { display: grid; justify-items: center; gap: 1vh; position: relative; }
+  .slot .fig { height: 48vh; width: 100%; display: grid; place-items: end center; }
+  .slot .fig img { max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 10px 0 #0009); }
+  .slot .fig img.square { border-radius: 18px; border: var(--stroke); max-height: 30vh; }
+  .slot .ghost { width: 70%; height: 80%; border: 3px dashed #ffffff55; border-radius: 40% 40% 16px 16px; display: grid; place-items: center; color: #ffffff88; font-size: 3rem; }
+  .slot .name { font-size: clamp(1rem, 1.5vw, 1.5rem); }
+  .slot .status { font-size: clamp(0.8rem, 1vw, 1rem); min-height: 1.3em; }
+  .slot .making { display: grid; justify-items: center; gap: 1vh; align-self: center; }
+  .floor { height: 1.2vh; background: repeating-linear-gradient(-45deg, var(--tape) 0 18px, var(--ink) 18px 36px); border: var(--stroke); border-radius: 6px; margin: 0 -0.6vw; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; background: var(--ok); }
+  .dot.off { background: #888; }
+
+  /* directing */
+  .direct { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr); gap: 3vw; align-items: center; }
+  .direct h2 { font-size: clamp(3rem, 7vw, 7.4rem); margin: 1vh 0; }
+  .dirfig { display: grid; grid-template-columns: auto 1fr; gap: 1.6vw; align-items: end; }
+  .dirfig .fig { height: 40vh; }
+  .dirfig .fig img { height: 100%; object-fit: contain; filter: drop-shadow(0 10px 0 #0009); }
+  .dirfig .fig img.square { height: 26vh; border-radius: 18px; border: var(--stroke); }
+  .who { font-size: clamp(1.3rem, 2.2vw, 2.2rem); font-weight: 600; display: grid; gap: 1.6vh; }
+  .strip { background: var(--ink); border: var(--stroke); border-radius: 10px; padding: 22px 16px; box-shadow: 0 10px 0 #0008;
+    background-image: radial-gradient(circle, var(--paper) 5px, transparent 6px), radial-gradient(circle, var(--paper) 5px, transparent 6px);
+    background-size: 34px 16px; background-repeat: repeat-x; background-position: 0 3px, 0 calc(100% - 3px); }
+  .frames { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 12px 0; }
+  .frame { aspect-ratio: 16/10; background: #15152a; border-radius: 6px; overflow: hidden; position: relative; display: grid; place-items: center; color: #fff9; }
+  .frame video { width: 100%; height: 100%; object-fit: cover; }
+  .frame .lbl { position: absolute; top: 8px; left: 8px; font-size: 0.85rem; z-index: 2; }
+  .frame .pct { font-family: var(--display); font-size: clamp(2rem, 3vw, 3rem); color: var(--paper); }
+  .frame .bar { position: absolute; left: 10px; right: 10px; bottom: 10px; }
+  .striphead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4vh; }
+
+  /* premiere */
+  .marquee { text-align: center; }
+  .bulbs { display: inline-block; position: relative; border: var(--stroke); border-radius: 14px; background: var(--paper); color: var(--ink); padding: 1vh 3vw 1.4vh;
+    box-shadow: 0 0 0 8px var(--ink), 0 0 0 12px var(--tape), 0 14px 0 12px #0008; }
+  .bulbs::before, .bulbs::after { content: ''; position: absolute; left: 10px; right: 10px; height: 8px; background: radial-gradient(circle, #fff6c8 3px, var(--tape) 4px, transparent 5px) 0 0 / 22px 8px repeat-x; animation: blink 0.8s steps(2) infinite; }
+  .bulbs::before { top: -18px; } .bulbs::after { bottom: -18px; animation-delay: 0.4s; }
+  @keyframes blink { 50% { filter: brightness(0.55); } }
+  .bulbs h2 { font-size: clamp(2.4rem, 5vw, 5rem); }
+  .screen { position: relative; width: min(100%, calc((100vh - 40vh) * 16 / 9)); margin: 3.4vh auto 0; aspect-ratio: 16/9; background: #000; border: var(--stroke); border-radius: 10px; overflow: hidden; box-shadow: 0 14px 0 #0008; }
+  .screen video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lower { position: absolute; left: 3%; bottom: 6%; display: grid; gap: 8px; justify-items: start; font-size: clamp(1rem, 1.6vw, 1.6rem); }
+  .titlecard { position: absolute; inset: 0; display: grid; place-items: center; background: var(--ultra); text-align: center; padding: 5%; }
+  .titlecard h3 { font-size: clamp(2.6rem, 6.4vw, 6.4rem); margin: 1.4vh 0; }
+  .titlecard p { font-size: clamp(1rem, 1.6vw, 1.6rem); }
+  .reacts { position: fixed; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+  .reacts span { position: absolute; bottom: -10vh; font-size: clamp(2.5rem, 5vw, 5rem); animation: float 3.2s cubic-bezier(.2,.6,.3,1) forwards; }
+  @keyframes float { to { transform: translateY(-95vh) rotate(var(--rot)); opacity: 0; } }
+
+  /* awards */
+  .awards { display: flex; gap: 4vw; justify-content: center; flex-wrap: wrap; margin-top: 3vh; }
+  .award { transform: rotate(var(--r)); background: var(--hot); color: var(--paper); border: var(--stroke); border-radius: 14px; padding: 2.4vh 2.4vw 0; text-align: center; min-width: 22vw; box-shadow: 0 12px 0 #0008; display: grid; justify-items: center; overflow: hidden; }
+  .award h3 { font-size: clamp(1.6rem, 2.6vw, 2.6rem); }
+  .award .n { font-size: clamp(2rem, 3.4vw, 3.4rem); font-family: var(--display); }
+  .award .fig { height: 34vh; margin-top: 1vh; }
+  .award .fig img { height: 100%; object-fit: contain; }
+  .award .fig img.square { height: 26vh; border-radius: 14px; border: var(--stroke); margin-bottom: 2vh; }
+  .filmrow { display: flex; gap: 2vw; justify-content: center; align-items: center; margin-top: 3vh; }
+  .filmrow .qr { width: 120px; }
+  footer { display: flex; justify-content: space-between; align-items: center; gap: 2vw; }
+  @media (max-width: 1000px) { .lobby, .direct { grid-template-columns: 1fr; } .slots { min-height: 36vh; } .slot .fig { height: 28vh; } }
+</style>
+</head>
+<body>
+<canvas id="ink" aria-hidden="true"></canvas>
+<main class="tv layer">
+  <header>
+    <img class="logo" src="/img/logo.png" alt="Crew Cut">
+    <div class="row"><span id="mode" class="tape paper mode hidden"></span><span id="roomtag" class="tape hidden"></span></div>
+  </header>
+  <section id="view" aria-live="polite"></section>
+  <footer><span class="muted" id="foot">Crew Cut by GiveMePrompts · open source on ComfyUI</span><span id="hostctl"></span></footer>
+</main>
+<div class="reacts" id="reacts"></div>
+<script src="/vendor/qrcode.js"></script>
+<script src="/ink.js"></script>
+<script src="/common.js"></script>
+<script src="/host.js"></script>
+</body>
+</html>

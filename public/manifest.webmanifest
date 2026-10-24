@@ -1,0 +1,2 @@
+{ "name": "Crew Cut", "short_name": "Crew Cut", "start_url": "/play", "display": "standalone", "background_color": "#090a33", "theme_color": "#1B1FB3",
+  "icons": [{ "src": "/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }] }
