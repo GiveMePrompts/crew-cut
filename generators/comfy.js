@@ -56,13 +56,17 @@ async function runStage(name, { images = [], prompt, seed }, outBase, onProgress
   if (b.prompt && prompt) wf.setInput(b.prompt.node, b.prompt.field, prompt);
   for (const sd of b.seeds || []) wf.setInput(sd.node, sd.field, seed);
   const job = await c.submit(wf);
-  try {
-    for await (const ev of job.events()) {
-      if (ev.kind === 'progress' && typeof ev.value === 'number') onProgress(Math.min(95, Math.round(ev.value * 100)));
-      if (ev.kind === 'statusChange' && ['succeeded', 'failed', 'canceled', 'expired'].includes(ev.status)) break;
-    }
-  } catch (_) { /* stream is best effort; result() below is authoritative */ }
-  await job.result();
+  // Progress comes from the live event stream, completion from polling: the stream has
+  // no replay, so a terminal event sent during a reconnect gap would otherwise hang the stage.
+  const stop = new AbortController();
+  (async () => {
+    try {
+      for await (const ev of job.events(stop.signal)) {
+        if (ev.kind === 'progress' && typeof ev.value === 'number') onProgress(Math.min(95, Math.round(ev.value * 100)));
+      }
+    } catch (_) { /* best effort */ }
+  })();
+  try { await job.result(); } finally { stop.abort(); }
   const outs = job.getOutputs(String(b.output.node));
   if (!outs.length) throw new Error(`${name}: workflow finished but node ${b.output.node} produced nothing`);
   const o = outs[outs.length - 1];
