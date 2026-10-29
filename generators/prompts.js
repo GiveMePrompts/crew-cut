@@ -88,7 +88,7 @@ function keyframePrompt({ genre, scene, shot, cast, twist }) {
 }
 
 function motionPrompt({ shot, twist }) {
-  return [shot.motion, twist ? `Show this happening: ${twist}.` : '', 'cel-shaded animation, smooth motion, 5 seconds', 'family-friendly, safe for work'].filter(Boolean).join('. ');
+  return [shot.motion, twist ? `Show this happening: ${twist}.` : '', 'the same characters stay in frame the whole shot, cel-shaded animation, smooth subtle motion, steady camera', 'family-friendly, safe for work'].filter(Boolean).join('. ');
 }
 
 module.exports = { GENRES, keyframePrompt, motionPrompt };

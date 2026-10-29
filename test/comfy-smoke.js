@@ -2,7 +2,7 @@
 // Usage: GENERATOR=comfy server running, then: node test/comfy-smoke.js [baseUrl] [selfie.png]
 const fs = require('fs'); const path = require('path');
 const BASE = process.argv[2] || 'http://localhost:3000';
-const SELFIE = process.argv[3] || path.join(__dirname, '..', 'examples', 'selfies', 'synthetic_selfie_00001_.png');
+const SELFIE = process.argv[3] || path.join(__dirname, '..', 'examples', 'selfies', 'rosa.jpg');
 const post = async (p, b) => { const r = await fetch(BASE + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }); const j = await r.json(); if (!r.ok) throw new Error(j.error); return j; };
 const state = async (code) => {
   const r = await fetch(`${BASE}/events?code=${code}`); const rd = r.body.getReader(); let buf = '';
