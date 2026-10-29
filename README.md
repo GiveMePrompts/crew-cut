@@ -6,6 +6,10 @@ Built for Comfy's **#OpenSourceHiggsfield** challenge. Every frame comes out of 
 
 ![A selfie becomes a character, then a scene](examples/pipeline.png)
 
+**Demo video (79 s, a real game on a MacBook):** https://github.com/GiveMePrompts/crew-cut/releases/download/v0.3.0/crew-cut-demo.mp4
+
+**A finished film from that game:** [`examples/film/the-rosa-job.mp4`](examples/film/the-rosa-job.mp4) (widescreen) and [`the-rosa-job-vertical.mp4`](examples/film/the-rosa-job-vertical.mp4) (9:16 for stories). Rosa's character and every still and shot in it came out of ComfyUI on an M2 Max; Dre and Mika are two of the four Crew Cut originals.
+
 ## How a game goes
 1. **TV:** open Crew Cut on a laptop hooked to the TV. Pick a genre (Heist, Horror, Rom-com) and the director's clock.
 2. **Phones:** scan the QR code. Type your name, take a selfie, and Crew Cut draws you as a character. Redraw twice, or play as one of the four Crew Cut originals.
@@ -18,11 +22,11 @@ Three ComfyUI workflows, all in [`workflows/`](workflows/):
 
 | Stage | Workflow | Model | Time on an M2 Max |
 |---|---|---|---|
-| Selfie → character | `character.json` | FLUX.2 [klein] 4B (image edit), GGUF Q4_K_M | ~2 min |
-| Characters → scene still | `keyframe.json` | FLUX.2 [klein] 4B with the cast as references | ~2 min |
-| Still → moving scene | `scene.json` | LTX-Video 2B 0.9.6 distilled, GGUF Q5_K_M | ~2 min |
+| Selfie → character | `character.json` | FLUX.2 [klein] 4B (image edit), GGUF Q4_K_M | ~1.5 min |
+| Characters → scene still | `keyframe.json` | FLUX.2 [klein] 4B with the cast as references | ~1.5 min |
+| Still → moving scene | `scene.json` | LTX-Video 2B 0.9.6 distilled, GGUF Q5_K_M | ~1.5 min |
 
-The game never sits and waits on the GPU: characters draw while people are still joining, and each scene renders while the next player directs. On a laptop a full game is roughly 15 minutes of rendering, and the premiere starts the moment the last scene lands. Example outputs are in [`examples/`](examples/).
+The game never sits and waits on the GPU: characters draw while people are still joining, and each scene renders while the next player directs. In the recorded demo game (3 players, 3 scenes) the character took 100 s and all three scenes were rendered 9 minutes after the last director locked in; the premiere starts the moment the last scene lands. Example outputs are in [`examples/`](examples/).
 
 ## Quick start (preview mode, no GPU)
 Needs Node 18+ and an ffmpeg build with the `drawtext` filter for the film export (`brew install ffmpeg-full`; the plain `ffmpeg` formula lacks it). Point `FFMPEG_PATH` at a specific binary if needed.

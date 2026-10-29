@@ -38,7 +38,7 @@ npm run comfy          # GENERATOR=comfy, COMFY_BASE_URL=http://127.0.0.1:8189
 ```
 Why GGUF: Apple's MPS backend can't run float8 tensors, so the fp8 checkpoints the ComfyUI templates ship with fail on a Mac. If you only have an fp8 file, `tools/fp8_to_bf16.py` converts it.
 
-Measured on an M2 Max (32 GB): character about 2 minutes, keyframe about 2 minutes, scene about 2 minutes. The render queue runs one job at a time and the game keeps playing while scenes render.
+Measured on an M2 Max (32 GB): character 80–100 s, keyframe plus scene about 3 minutes per scene. The render queue runs one job at a time and the game keeps playing while scenes render.
 
 To run one workflow by hand (handy when changing a graph):
 ```bash
